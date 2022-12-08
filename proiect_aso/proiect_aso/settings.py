@@ -72,8 +72,13 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'proiect_aso.wsgi.application'
 ASGI_APPLICATION = 'proiect_aso.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}
 
 
 # Database

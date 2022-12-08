@@ -1,0 +1,93 @@
+{%extends 'home/base.html'%} {%block title%} {{room.name}} | {%endblock%} {%block content%}
+
+<div class="p-10 lg:p-20 text-center">
+    <h1 class="text-3xl lg:text-6xl text-white">Welcome to {{room.name}}</h1>
+</div>
+
+
+<div class="lg:w-3/4 mx-4 bg-teal-600 p-2 lg:mx-auto rounded-lg">
+    <div class="chat-messages space-y-3" id="chat-messages">
+        {%for message in messages%}
+        <div class="p-4 bg-indigo-200 rounded-lg">
+            <div class="font-bold"> {{message.user.username}} </div>
+            <p>{{message.content}}</p>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+
+<div class="lg:w-2/4 mt-6 mx-4 lg:mx-auto p-4 bg-white rounded-xl">
+    <form method="post" action="." class="flex">
+        <input type="text" name="content" class="flex-1 mr-3" placeholder="Your message..." id="message">
+        <button class="px-5 py-3 rounded-xl text-white bg-teal-600 hover:bg-teal-700" id="send">Submit</button>
+    </form>
+</div>
+{%endblock%} {%block scripts%} {{room.slug|json_script:"json-roomname"}} {{request.user.username|json_script:"json-username"}}
+
+<script>
+    const roomName = JSON.parse(document.getElementById('json-roomname').textContent)
+    const userName = JSON.parse(document.getElementById('json-username').textContent)
+
+
+    const chatSocket = new WebSocket('ws://' + window.location.host + '/ws/' + roomName + '/')
+
+    chatSocket.onmessage = function(e) {
+        console.log('onmessage')
+
+        const data = JSON.parse(e.data)
+        console.log(data)
+
+        if (data.message) {
+            let html = '<div class="p-4 bg-indigo-200 rounded-lg">';
+            html += '<div class="font-bold">' + data.username + '</div>';
+            html += '<p>' + data.message + '</p>';
+            html += '</div>';
+
+            document.querySelector('#chat-messages').innerHTML += html
+            scrollToBottom()
+        } else {
+            alert('Message empty.')
+        }
+    }
+
+    chatSocket.onclose = function(e) {
+        console.log('onclose')
+    }
+
+
+    document.querySelector('#send').onclick = function(e) {
+        e.preventDefault();
+
+        const messageDom = document.querySelector('#message')
+        const message = messageDom.value
+
+        console.log('onmessage')
+
+        chatSocket.send(JSON.stringify({
+            'message': message,
+            'username': userName,
+            'room': roomName
+        }))
+
+        messageDom.value = ''
+
+        return false
+    }
+
+    scrollToBottom()
+
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+
+    function scrollToBottom() {
+        const chat = document.querySelector('#chat-messages')
+        chat.scrollTop = chat.scrollHeight
+        document.querySelector('#chat-message-input').focus();
+    }
+</script>
+
+{%endblock%}

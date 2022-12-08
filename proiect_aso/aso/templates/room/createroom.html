@@ -1,0 +1,21 @@
+{%extends 'home/base.html'%} {%block title%} Create room | {%endblock%} {%block content%}
+<div class="p-10 lg:p-20 text-center">
+    <h1 class="text-3xl lg:text-6xl text-white">Create room</h1>
+</div>
+<form method="post" action="{% url 'createroom' %}" class="lg:w-1/4 px-4 mx-auto items-center">
+    {%csrf_token%}
+
+    <div class="mb-10">
+        <label class="text-white">Room name</label>
+        <input type="text" name="name" class="w-full mt-2 px-4 py-2 rounded-xl">
+    </div>
+
+    <div class="mb-10">
+        <label class="text-white">Room slug</label>
+        <input type="text" name="slug" class="w-full mt-2 px-4 py-2 rounded-xl">
+    </div>
+
+    <button class="px-5 py-3 rounded-xl text-white bg-teal-800 hover:bg-teal-700 text-center">Create room</button>
+</form>
+
+{%endblock%}

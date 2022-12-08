@@ -1,0 +1,26 @@
+{%extends 'home/base.html'%} {%block title%} Rooms | {%endblock%} {%block content%}
+
+<div class="p-10 lg:p-20 text-center">
+    <h1 class="text-3xl lg:text-6xl text-white">Rooms</h1>
+</div>
+
+
+<div class="w-full flex flex-wrap items-center px-10">
+    {%for room in rooms%}
+    <div class="max-w-sm overflow-hidden px-10 py-6 w-full h-full">
+        <div class="bg-white rounded-lg shadow-lg w-full h-full">
+            <div class="px-6 py-4">
+                <div class="font-bold text-xl mb-2">{{room.name}}</div>
+
+                <br><br><br>
+                <a href="/rooms/{{room.slug}}" class="inline-block rounded-lg bg-indigo-600 px-4 py-1.5 text-base font-semibold leading-7 text-white shadow-sm ring-1 ring-indigo-600 hover:bg-indigo-700 hover:ring-indigo-700">Join chat room</a>
+            </div>
+            <div class="px-6 pt-4 pb-2">
+                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">created by timaruflorin</span>
+            </div>
+        </div>
+    </div>
+    {%endfor%}
+</div>
+
+{%endblock%}
